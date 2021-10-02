@@ -162,7 +162,7 @@
     {% extends "examples/index.html" %}
 
     {% block content %}
-
+    {% if current_user.is_authenticated %}
       <div class="content">
         <div class="container-fluid">
           <div class="row">
@@ -273,6 +273,7 @@
           </div>
         </div>
       </div>
+    {% endif %}
 
     {% endblock %}
 
