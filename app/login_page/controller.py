@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user
 from app import db
 from app.models.user import User
+from datetime import datetime, timezone
 login_routes = Blueprint('login_page', __name__,
                          template_folder='templates')
 
@@ -39,3 +40,18 @@ def login_dashboard():
 def logout():
     logout_user()
     return redirect(url_for('login_page.login'))
+
+
+@login_routes.route('/forgot')
+def create_test_user():
+    create_user = User(email='volodymyr@yahoo.com',
+                       first_name='admin',
+                       last_name='admin',
+                       department='programmer',
+                       county='test',
+                       birth_date=datetime.now(tz=timezone.utc),
+                       password=generate_password_hash('pass', method='sha256'))
+    print("User: ", create_user)
+    db.session.add(create_user)
+    db.session.commit()
+    return "Create"
