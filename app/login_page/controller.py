@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime, timezone
 from app import db
 from app.models.user import User
-from datetime import datetime, timezone
+
+
 login_routes = Blueprint('login_page', __name__,
                          template_folder='templates')
 

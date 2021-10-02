@@ -7,6 +7,7 @@ from app.models.user import User
 from app import db
 from datetime import datetime, timezone
 import uuid
+
 admin_routes = Blueprint('admin_dashboard', __name__,
                          template_folder='templates')
 
@@ -39,19 +40,13 @@ def user():
             country = request.form.get('country')
             birth_date = request.form.get('birth_date')
             password = 'pass'
-            # create_user = User(email=email,
-            #                    password='pass',
-            #                    first_name=first_name,
-            #                    last_name=last_name,
-            #                    department=department,
-            #                    county=country,
-            #                    birth_date=datetime.now(tz=timezone.utc))
+
             create_user = User(email=email,
                                first_name=first_name,
                                last_name=last_name,
                                department=department,
                                county=country,
-                               birth_date=datetime.now(tz=timezone.utc),
+                               birth_date=birth_date,
                                password=generate_password_hash(password, method='sha256'))
             print("User: ", create_user)
             db.session.add(create_user)
@@ -72,8 +67,9 @@ def user_list():
         return render_template('error/index.html')
 
 
-# @admin_routes.route(f'/{route}/create-user', methods=['post'])
-# def create_user():
-#     if request.method == 'POST':
-#         print('ok')
-#     return render_template('examples/user.html')
+@admin_routes.route(f'/{route}/profile', methods=['get'])
+@login_required
+def get_profile():
+    if current_user.is_authenticated:
+        return render_template('examples/profile.html', username=current_user.first_name,
+                               department=current_user.department)
