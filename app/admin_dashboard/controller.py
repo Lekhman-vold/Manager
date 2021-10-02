@@ -22,7 +22,7 @@ def test():
 @login_required
 def dashboard():
     if current_user.is_authenticated:
-        return render_template('examples/index.html')
+        return render_template('examples/index.html', name=current_user.first_name)
     else:
         return "User is not auth"
 
