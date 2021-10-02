@@ -1,5 +1,5 @@
 import os
-from flask import Flask, redirect, jsonify
+from flask import Flask, redirect, jsonify, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_security import Security, SQLAlchemyUserDatastore, auth_required
@@ -8,7 +8,8 @@ from dotenv import load_dotenv, dotenv_values
 
 db = SQLAlchemy()
 migrate = Migrate()
-config = dotenv_values(".env")
+# config = dotenv_values(".env")
+load_dotenv()
 
 
 def create_app():
@@ -22,15 +23,14 @@ def create_app():
 
     app = Flask(__name__, template_folder='templates')
 
-    # @app.before_first_request
-    # def redirect_to_login():
-    #     print("first")
-    #     return redirect('/')
+    @app.route('/')
+    def redirect_to_login():
+        return redirect('/login/')
 
     # CORS(app)
-    app.config['SQLALCHEMY_DATABASE_URI'] = config['DATABASE_URL']
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = config['SQLALCHEMY_TRACK_MODIFICATIONS']
-    app.config['SECRET_KEY'] = config['SECRET_KEY']
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS")
+    app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
     app.config['SECURITY_PASSWORD_SALT'] = 'MY_SALT'
 
     # global db_engine
