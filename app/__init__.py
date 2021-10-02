@@ -1,11 +1,14 @@
-from flask import Flask, redirect
+import os
+from flask import Flask, redirect, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_security import Security, SQLAlchemyUserDatastore, auth_required
 from flask_login import LoginManager
+from dotenv import load_dotenv, dotenv_values
 
 db = SQLAlchemy()
 migrate = Migrate()
+config = dotenv_values(".env")
 
 
 def create_app():
@@ -25,9 +28,9 @@ def create_app():
     #     return redirect('/')
 
     # CORS(app)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://naruto:voloda2000@localhost:5432/lcg_manager'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-    app.config['SECRET_KEY'] = 'pf9Wkove4IKEAXvy-cQkeDPhv9Cb3Ag-wyJILbq_dFw'
+    app.config['SQLALCHEMY_DATABASE_URI'] = config['DATABASE_URI']
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = config['SQLALCHEMY_TRACK_MODIFICATIONS']
+    app.config['SECRET_KEY'] = config['SECRET_KEY']
     app.config['SECURITY_PASSWORD_SALT'] = 'MY_SALT'
 
     # global db_engine
@@ -46,6 +49,14 @@ def create_app():
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(1)
+
+    @app.errorhandler(500)
+    def server_error(error):
+        return jsonify({
+            "success": False,
+            "error": 500,
+            "message": "server error!"
+        }), 500
 
     app.register_blueprint(admin_routes)
     app.register_blueprint(user_routes)
