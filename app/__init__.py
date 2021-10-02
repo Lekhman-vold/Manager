@@ -27,8 +27,12 @@ def create_app():
     def redirect_to_login():
         return redirect('/login/')
 
+    uri = os.getenv("DATABASE_URL")
+    if uri.startswith("postgres://"):
+        uri = uri.replace("postgres://", "postgresql://", 1)
+
     # CORS(app)
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+    app.config['SQLALCHEMY_DATABASE_URI'] = uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS")
     app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
     app.config['SECURITY_PASSWORD_SALT'] = 'MY_SALT'
