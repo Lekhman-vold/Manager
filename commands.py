@@ -9,3 +9,5 @@ from app.models.user import User, Role
 @with_appcontext
 def create_tables():
     db.create_all()
+
+create_tables()
