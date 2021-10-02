@@ -28,7 +28,7 @@ def create_app():
     #     return redirect('/')
 
     # CORS(app)
-    app.config['SQLALCHEMY_DATABASE_URI'] = config['DATABASE_URI']
+    app.config['SQLALCHEMY_DATABASE_URI'] = config['DATABASE_URL']
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = config['SQLALCHEMY_TRACK_MODIFICATIONS']
     app.config['SECRET_KEY'] = config['SECRET_KEY']
     app.config['SECURITY_PASSWORD_SALT'] = 'MY_SALT'
